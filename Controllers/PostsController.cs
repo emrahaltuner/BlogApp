@@ -24,7 +24,6 @@ public class PostsController : Controller
             new PostViewModel
             {
                 Posts = _postRepository.Posts.ToList(),
-                Tags = _tagRepository.Tags.ToList(),
             }
             );
     }

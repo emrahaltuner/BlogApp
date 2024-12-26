@@ -1,0 +1,17 @@
+@model List<Post>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="card-title">New Posts</h5>
+        </div>
+        <div class="card-body">
+            <ul class="gap-2">
+                @foreach(var post in Model)
+
+                {
+                <li class="">
+                    <a href="" class="">@post.Title</a>
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
