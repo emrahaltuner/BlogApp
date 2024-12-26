@@ -1,5 +1,5 @@
 @model List<Tag>
-    <div class="card" mb-3>
+    <div class="card mb-3">
         <div class="card-header">
             <h5 class="card-title">Tags</h5>
         </div>
@@ -9,7 +9,7 @@
 
                 {
                 <li class="list-inline-item">
-                    <a href="" class="btn btn-outline-secondary btn-sm">@tag.Text</a>
+                    <a href="/posts/tag/@tag.Url" class="btn btn-outline-secondary btn-sm">@tag.Text</a>
                 </li>
                 }
             </ul>
