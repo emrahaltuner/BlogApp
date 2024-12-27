@@ -2,6 +2,7 @@ using System;
 using BlogApp.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace BlogApp.Data.Concrete.EfCore;
 
@@ -22,19 +23,19 @@ public static class SeedData
             if (!context.Tags.Any())
             {
                 context.Tags.AddRange(
-                    new Tag { Text = "web programlama", Url = "web-programlama" },
-                    new Tag { Text = "backend programlama", Url = "backend-programlama" },
-                    new Tag { Text = "frontend", Url = "frontend" },
-                    new Tag { Text = "fullstack", Url = "fullstack" },
-                    new Tag { Text = "php", Url = "php" }
+                    new Tag { Text = "web programlama", Url = "web-programlama", Color = TagColors.danger },
+                    new Tag { Text = "backend programlama", Url = "backend-programlama", Color = TagColors.primary },
+                    new Tag { Text = "frontend", Url = "frontend", Color = TagColors.secondary },
+                    new Tag { Text = "fullstack", Url = "fullstack", Color = TagColors.success },
+                    new Tag { Text = "php", Url = "php", Color = TagColors.warning }
                 );
                 context.SaveChanges();
             }
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
-                    new User { UserName = "emrahaltuner" },
-                    new User { UserName = "nanotanitim" }
+                    new User { UserName = "emrahaltuner", Image = "p1.jpg" },
+                    new User { UserName = "nanotanitim", Image = "p2.jpg" }
                 );
                 context.SaveChanges();
             }
@@ -50,7 +51,11 @@ public static class SeedData
                         Image = "1.jpg",
                         PublishedOn = DateTime.Now.AddDays(-10),
                         Tags = context.Tags.Take(3).ToList(),
-                        UserId = 1
+                        UserId = 1,
+                        Comments = new List<Comment>{
+                            new Comment{Text="Çok iyi bir kurs muhteşem",PublishedOn=new DateTime(),UserId=1},
+                            new Comment{Text="Faydalı bir kurs tavsiye ederim",PublishedOn=new DateTime(),UserId=2}
+                        }
                     },
                                             new Post
                                             {
@@ -61,7 +66,11 @@ public static class SeedData
                                                 Image = "2.jpg",
                                                 PublishedOn = DateTime.Now.AddDays(-20),
                                                 Tags = context.Tags.Take(2).ToList(),
-                                                UserId = 2
+                                                UserId = 2,
+                                                Comments = new List<Comment>{
+                                                new Comment{Text="Çok iyi bir kurs muhteşem",PublishedOn=new DateTime(),UserId=1},
+                                                new Comment{Text="Faydalı bir kurs tavsiye ederim",PublishedOn=new DateTime(),UserId=2}
+                                                }
                                             },
                                             new Post
                                             {

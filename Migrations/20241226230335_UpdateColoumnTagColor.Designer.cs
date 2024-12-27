@@ -3,6 +3,7 @@ using System;
 using BlogApp.Data.Concrete.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20241226230335_UpdateColoumnTagColor")]
+    partial class UpdateColoumnTagColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -23,23 +26,31 @@ namespace BlogApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PostId")
+                    b.Property<string>("Commenttext")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PostId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PostId1")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PublishedOn")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserId1")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("PostId1");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Comments");
                 });
@@ -134,19 +145,19 @@ namespace BlogApp.Migrations
                 {
                     b.HasOne("BlogApp.Entity.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
+                        .HasForeignKey("PostId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogApp.Entity.User", "User")
+                    b.HasOne("BlogApp.Entity.User", "user")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("BlogApp.Entity.Post", b =>

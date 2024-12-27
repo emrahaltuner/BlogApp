@@ -17,9 +17,11 @@
                         <h5><a href="/posts/@post.Url" class="btn-link fw-bold text-decoration-none">@post.Title</a>
                         </h5>
                         <p>@post.Content</p>
-
-                        <a href="#" class="badge bg-danger bg-opacity-10 text-danger mb-2">Web programlama</a>
-
+                        @foreach(var tag in Model.Tags)
+                        {
+                        <a href="/posts/tag/@tag.Url"
+                            class="badge bg-danger bg-opacity-10 text-@tag.Color mb-2">@tag.Text</a>
+                        }
                     </div>
                 </div>
             </div>

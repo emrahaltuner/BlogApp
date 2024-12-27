@@ -26,13 +26,21 @@ public class PostsController : Controller
         {
             posts = posts.Where(x => x.Tags.Any(t => t.Url == tag));
         }
-
+        posts = posts.Include(t => t.Tags);
         return View(
-            new PostViewModel { Posts = await posts.ToListAsync() });
+            new PostViewModel
+            {
+                Posts = await posts.ToListAsync()
+            });
     }
     public async Task<IActionResult> Details(string? url)
     {
-        var post = await _postRepository.Posts.FirstOrDefaultAsync(p => p.Url == url);
+        var post = await _postRepository
+        .Posts
+        .Include(p => p.Tags)
+        .Include(c => c.Comments)
+        .ThenInclude(u => u.User)
+        .FirstOrDefaultAsync(p => p.Url == url);
         return View(post);
     }
 }
