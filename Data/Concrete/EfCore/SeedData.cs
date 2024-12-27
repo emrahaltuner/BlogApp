@@ -34,8 +34,8 @@ public static class SeedData
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
-                    new User { UserName = "emrahaltuner", Image = "p1.jpg" },
-                    new User { UserName = "nanotanitim", Image = "p2.jpg" }
+                    new User { UserName = "emrahaltuner", Name = "Emrah Altuner", Email = "emrah@emrah.com", Password = "123456", Image = "p1.jpg" },
+                    new User { UserName = "nanotanitim", Name = "Nano Tanıtım", Email = "nano@nano.com", Password = "123456", Image = "p2.jpg" }
                 );
                 context.SaveChanges();
             }
