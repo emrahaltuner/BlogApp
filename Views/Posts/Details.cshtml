@@ -19,20 +19,41 @@
                     <h4>@Model.Comments.Count() Adet Yorum</h4>
                 </div>
                 <div class="card-body">
-                    @foreach(var comment in Model.Comments)
-                    {
-                    <div class="my-4 d-flex">
-                        <img src="~/img/@comment.User.Image" alt="" class="avatar rounded-circle fload-start me-3">
-                        <div>
-                            <div class="mb-2">
-                                <h6>@comment.User.UserName</h6>
-                                <span>@comment.PublishedOn</span>
+                    <div id="comments">
+                        @foreach(var comment in Model.Comments)
+                        {
+                        <div class="my-4 d-flex">
+                            <img src="~/img/@comment.User.Image" alt="" class="avatar rounded-circle fload-start me-3">
+                            <div>
+                                <div class="mb-2 d-flex">
+                                    <h6 class="me-2">@comment.User.UserName</h6>
+                                    <small>@comment.PublishedOn.ToString("G")</small>
+                                </div>
+                                <p>@comment.Text</p>
                             </div>
-                            <p>@comment.Text</p>
                         </div>
+                        }
                     </div>
-                    }
+                    <hr class="my-4">
+                    <div>
+                        <h4>Yorum Ekle</h4>
+                        <form action="/posts/addComment" method="post">
+                            <input type="hidden" name="PostId" id="PostId" value="@Model.PostId">
+                            <div class="mb-3">
+                                <label for="UserName" class="form-label">UserName</label>
+                                <input type="text" name="userName" id="UserName" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="Text" class="form-label">Yorum</label>
+                                <textarea type="text" name="Text" id="Text" class="form-control"></textarea>
+                            </div>
+                            <div class="">
+                                <button id="btnYorumKayit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -46,3 +67,44 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnYorumKayit").click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("addComment")',
+                dataType: 'Json',
+                data: {
+                    PostId: $('#PostId').val(),
+                    UserName: $('#UserName').val(),
+                    Text: $('#Text').val(),
+
+                },
+                success: function (yorum) {
+                    $("#comments").append(`
+                    <div class="my-4 d-flex">
+                            <img src="/img/${yorum.image}" alt="" class="avatar rounded-circle fload-start me-3">
+                            <div>
+                                <div class="mb-2 d-flex">
+                                    <h6 class="me-2">${yorum.userName}</h6>
+                                    <small>${yorum.publishedOn}</small>
+                                </div>
+                                <p>${yorum.text}</p>
+                            </div>
+                        </div>
+                    `);
+
+                    $('#UserName').val('');
+                    $('#Text').val('');
+                }
+
+            });
+            return false;
+        });
+    });
+</script>
+}

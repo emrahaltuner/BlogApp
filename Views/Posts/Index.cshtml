@@ -14,7 +14,8 @@
                         <img src="~/img/@post.Image" class="img-fluid rounded" alt="">
                     </div>
                     <div class="col-8">
-                        <h5><a href="/posts/@post.Url" class="btn-link fw-bold text-decoration-none">@post.Title</a>
+                        <h5><a href="/posts/details/@post.Url"
+                                class="btn-link fw-bold text-decoration-none">@post.Title</a>
                         </h5>
                         <p>@post.Content</p>
                         @foreach(var tag in Model.Tags)

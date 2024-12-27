@@ -12,11 +12,13 @@ public class PostsController : Controller
 {
     private IPostRepository _postRepository;
     private ITagRepository _tagRepository;
+    private ICommentRepository _commentRepository;
 
-    public PostsController(IPostRepository postRepository, ITagRepository tagRepository)
+    public PostsController(IPostRepository postRepository, ITagRepository tagRepository, ICommentRepository commentRepository)
     {
         _postRepository = postRepository;
         _tagRepository = tagRepository;
+        _commentRepository = commentRepository;
     }
     public async Task<IActionResult> Index(string? tag)
     {
@@ -42,5 +44,28 @@ public class PostsController : Controller
         .ThenInclude(u => u.User)
         .FirstOrDefaultAsync(p => p.Url == url);
         return View(post);
+    }
+    [HttpPost]
+    public JsonResult AddComment(int PostId, string UserName, string Text)
+    {
+        var entity = new Comment
+        {
+            Text = Text,
+            PublishedOn = DateTime.Now,
+            PostId = PostId,
+            User = new User { UserName = UserName, Image = "3.jpg" }
+        };
+        _commentRepository.CreateComment(entity);
+
+        //return RedirectToRoute("post_details", new { url = Url });
+
+        return Json(new
+        {
+            UserName,
+            Text,
+            entity.PublishedOn,
+            entity.User.Image,
+        });
+
     }
 }
