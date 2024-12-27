@@ -16,7 +16,7 @@
         <div class="bg-white mt-3">
             <div class="card border-0">
                 <div class="card-header pb-0">
-                    <h4>@Model.Comments.Count() Adet Yorum</h4>
+                    <h4> <span id="commentCount">@Model.Comments.Count()</span> Adet Yorum</h4>
                 </div>
                 <div class="card-body">
                     <div id="comments">
@@ -100,6 +100,8 @@
 
                     $('#UserName').val('');
                     $('#Text').val('');
+                    var adet = parseInt($("#commentCount").text());
+                    $("#commentCount").text(adet + 1);
                 }
 
             });
