@@ -1,9 +1,13 @@
+using System.IO;
 using System.Security.Claims;
 using BlogApp.Data.Abstrack;
+using BlogApp.Entity;
 using BlogApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace BlogApp.Controllers
 {
@@ -64,6 +68,65 @@ namespace BlogApp.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Posts");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model, IFormFile Image)
+        {
+            //Resim validate and uploads
+            var allowedExtensin = new[] { ".jpg", ".jpeg", ".png" };
+            var ext = Path.GetExtension(Image.FileName);
+            var randomFileName = string.Format($"{Guid.NewGuid()}{ext}");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+            if (Image != null)
+            {
+
+                //image validate 
+                if (!allowedExtensin.Contains(ext))
+                {
+                    ModelState.AddModelError("", "Geçerli bir resim seçin");
+                }
+
+            }
+            //model validation en create
+            if (ModelState.IsValid)
+            {
+                //uploads image to path
+                if (Image != null)
+                {
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await Image.CopyToAsync(stream);
+                    }
+                    model.Image = randomFileName;
+                }
+
+                //create user model
+                var user = await _userRepository.Users.FirstOrDefaultAsync(x => x.UserName == model.UserName || x.Email == model.Email);
+                if (user == null)
+                {
+                    _userRepository.CreateUsers(new User
+                    {
+                        UserName = model.UserName,
+                        Name = model.Name,
+                        Email = model.Email,
+                        Password = model.Password,
+                        Image = model.Image ?? "p1.jpg"
+
+                    });
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Kullanıcı Adı yada Email kullanımda");
+                }
+
+            }
+            return View(model);
         }
     }
 }

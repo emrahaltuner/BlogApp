@@ -46,6 +46,7 @@ public static class SeedData
                     {
                         Title = "Asp.Net Core",
                         Content = "Asp.Net Core dersleri",
+                        Desc = "Asp.Net Core dersleri",
                         IsActive = true,
                         Url = "Asp-Net-Core",
                         Image = "1.jpg",
@@ -61,6 +62,7 @@ public static class SeedData
                                             {
                                                 Title = "Javascript Kursu",
                                                 Content = "Javascript dersleri",
+                                                Desc = "Javascript dersleri",
                                                 IsActive = true,
                                                 Url = "javascript-kursu",
                                                 Image = "2.jpg",
@@ -76,6 +78,7 @@ public static class SeedData
                                             {
                                                 Title = "React.Js Kursu",
                                                 Content = "React.Js dersleri",
+                                                Desc = "React.Js dersleri",
                                                 IsActive = false,
                                                 Url = "react-js-kursu",
                                                 Image = "3.jpg",
@@ -87,6 +90,7 @@ public static class SeedData
                                             {
                                                 Title = "Vue Js Kursu",
                                                 Content = "Vue.Js dersleri",
+                                                Desc = "Vue.Js dersleri",
                                                 IsActive = true,
                                                 Url = "vue-js-kursu",
                                                 Image = "1.jpg",
@@ -98,6 +102,7 @@ public static class SeedData
                                             {
                                                 Title = "Php Laravel Kursu",
                                                 Content = "Php laravel dersleri",
+                                                Desc = "Php laravel dersleri",
                                                 IsActive = false,
                                                 Url = "php-laravel-kursu",
                                                 Image = "2.jpg",
@@ -109,6 +114,7 @@ public static class SeedData
                                             {
                                                 Title = "Angular Js Kursu",
                                                 Content = "Angular Js dersleri",
+                                                Desc = "Angular Js dersleri",
                                                 IsActive = true,
                                                 Url = "angular-js-kursu",
                                                 Image = "3.jpg",

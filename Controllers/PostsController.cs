@@ -57,7 +57,7 @@ public class PostsController : Controller
             Text = Text,
             PublishedOn = DateTime.Now,
             PostId = PostId,
-            UserId = int.Parse(userId)
+            UserId = int.Parse(userId ?? "")
         };
         _commentRepository.CreateComment(entity);
 
