@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using BlogApp.Data.Abstrack;
 using BlogApp.Data.Concrete.EfCore;
 using BlogApp.Entity;
@@ -22,7 +23,6 @@ public class PostsController : Controller
     }
     public async Task<IActionResult> Index(string? tag)
     {
-        var claims = User.Claims;
 
         var posts = _postRepository.Posts;
         if (!string.IsNullOrEmpty(tag))
@@ -47,14 +47,17 @@ public class PostsController : Controller
         return View(post);
     }
     [HttpPost]
-    public JsonResult AddComment(int PostId, string UserName, string Text)
+    public JsonResult AddComment(int PostId, string Text)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var username = User.FindFirstValue(ClaimTypes.Name);
+        var image = User.FindFirstValue(ClaimTypes.UserData);
         var entity = new Comment
         {
             Text = Text,
             PublishedOn = DateTime.Now,
             PostId = PostId,
-            User = new User { UserName = UserName, Image = "3.jpg" }
+            UserId = int.Parse(userId)
         };
         _commentRepository.CreateComment(entity);
 
@@ -62,10 +65,10 @@ public class PostsController : Controller
 
         return Json(new
         {
-            UserName,
+            username,
             Text,
             entity.PublishedOn,
-            entity.User.Image,
+            image,
         });
 
     }

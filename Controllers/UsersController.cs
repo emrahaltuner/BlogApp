@@ -16,11 +16,16 @@ namespace BlogApp.Controllers
         }
         public IActionResult Login()
         {
+            if (User.Identity!.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Posts");
+            }
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var isUser = _userRepository.Users.FirstOrDefault(x => x.Email == model.Email && x.Password == model.Password);
@@ -30,6 +35,8 @@ namespace BlogApp.Controllers
                     userClaim.Add(new Claim(ClaimTypes.NameIdentifier, isUser.UserId.ToString()));
                     userClaim.Add(new Claim(ClaimTypes.Name, isUser.UserName ?? ""));
                     userClaim.Add(new Claim(ClaimTypes.GivenName, isUser.Name ?? ""));
+                    userClaim.Add(new Claim(ClaimTypes.UserData, isUser.Image ?? ""));
+
 
                     if (isUser.Email == "emrah@emrah.com")
                     {

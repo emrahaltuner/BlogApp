@@ -35,14 +35,13 @@
                         }
                     </div>
                     <hr class="my-4">
+                    @if(User.Identity!.IsAuthenticated)
+                    {
                     <div>
                         <h4>Yorum Ekle</h4>
                         <form action="/posts/addComment" method="post">
                             <input type="hidden" name="PostId" id="PostId" value="@Model.PostId">
-                            <div class="mb-3">
-                                <label for="UserName" class="form-label">UserName</label>
-                                <input type="text" name="userName" id="UserName" class="form-control">
-                            </div>
+
                             <div class="mb-3">
                                 <label for="Text" class="form-label">Yorum</label>
                                 <textarea type="text" name="Text" id="Text" class="form-control"></textarea>
@@ -52,6 +51,10 @@
                             </div>
                         </form>
                     </div>
+                    }else{
+                    <span>Yorum yazmak için lütfen giriş yapın <a href="/users/login">Login</a></span>
+                    }
+
                 </div>
 
             </div>
@@ -90,7 +93,7 @@
                             <img src="/img/${yorum.image}" alt="" class="avatar rounded-circle fload-start me-3">
                             <div>
                                 <div class="mb-2 d-flex">
-                                    <h6 class="me-2">${yorum.userName}</h6>
+                                    <h6 class="me-2">${yorum.username}</h6>
                                     <small>${yorum.publishedOn}</small>
                                 </div>
                                 <p>${yorum.text}</p>
