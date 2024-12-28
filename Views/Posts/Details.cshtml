@@ -11,7 +11,7 @@
                 <a href="#" class="badge bg-danger bg-opacity-10 text-danger mb-2 fw-bold">Web programlama</a>
             </div>
             <img src="~/img/@Model.Image" class="img-fluid rounded" alt="">
-            <p>@Model.Content</p>
+            <p>@Html.Raw(@Model.Content)</p>
         </div>
         <div class="bg-white mt-3">
             <div class="card border-0">

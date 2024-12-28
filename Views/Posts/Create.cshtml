@@ -1,0 +1,49 @@
+@model PostCreateViewModel
+<div class="row">
+    <div class="col-12">
+        <div class="bg-white p-4">
+            <h1>User Login</h1>
+            <form action="/posts/create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control">
+                    <span asp-validation-for="Title"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Desc" class="form-label"></label>
+                    <input asp-for="Desc" class="form-control">
+                    <span asp-validation-for="Desc"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Url" class="form-label"></label>
+                    <input asp-for="Url" class="form-control">
+                    <span asp-validation-for="Url"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label"></label>
+                    <textarea asp-for="Content" class="form-control"></textarea>
+                    <span asp-validation-for="Content"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="ImageFile" class="form-label">Profil Resmi</label>
+                    <input class="form-control" type="file" name="ImageFile" id="ImageFile">
+                </div>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.6.0/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#Content'
+    });
+</script>
+}

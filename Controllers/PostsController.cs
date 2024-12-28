@@ -4,6 +4,7 @@ using BlogApp.Data.Abstrack;
 using BlogApp.Data.Concrete.EfCore;
 using BlogApp.Entity;
 using BlogApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,9 @@ public class PostsController : Controller
         _tagRepository = tagRepository;
         _commentRepository = commentRepository;
     }
+
+
+
     public async Task<IActionResult> Index(string? tag)
     {
 
@@ -71,5 +75,90 @@ public class PostsController : Controller
             image,
         });
 
+    }
+    [Authorize]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Create(PostCreateViewModel model, IFormFile ImageFile)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+        if (ModelState.IsValid)
+        {
+            //img upload 
+            var imagePath = "wwwroot/img";
+            var uploadedFileName = await UploadFileAsync(ImageFile, imagePath);
+            if (uploadedFileName != null)
+            {
+                model.Image = uploadedFileName;
+            }
+            _postRepository.CreatePost(
+                new Post
+                {
+                    Title = model.Title,
+                    Content = model.Content,
+                    Desc = model.Desc,
+                    Url = model.Url,
+                    IsActive = false,
+                    UserId = int.Parse(userId ?? ""),
+                    PublishedOn = DateTime.Now,
+
+                    Image = model.Image,
+                }
+            );
+            return RedirectToAction("Index");
+        }
+        return View(model);
+    }
+
+    public async Task<IActionResult> List()
+    {
+
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "");
+        var role = User.FindFirstValue(ClaimTypes.Role);
+        var posts = _postRepository.Posts;
+        if (string.IsNullOrEmpty(role))
+        {
+            posts = posts.Where(i => i.UserId == userId);
+        }
+        return View(await posts.ToListAsync());
+    }
+
+
+
+
+
+
+    //İmage Upload methot
+    private async Task<string?> UploadFileAsync(IFormFile image, string imagePath)
+    {
+        if (image == null)
+        {
+            return null;
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        var ext = Path.GetExtension(image.FileName);
+        if (!allowedExtensions.Contains(ext))
+        {
+            ModelState.AddModelError("", "Geçerli bir resim seçin");
+            return null;
+        }
+
+        var randomFileName = $"{Guid.NewGuid()}{ext}";
+        var path = Path.Combine(Directory.GetCurrentDirectory(), imagePath, randomFileName);
+
+        using (var stream = new FileStream(path, FileMode.Create))
+        {
+            await image.CopyToAsync(stream);
+        }
+
+        return randomFileName;
     }
 }
