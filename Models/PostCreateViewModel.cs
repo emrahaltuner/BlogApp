@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using BlogApp.Entity;
 
 namespace BlogApp.Models
 {
@@ -6,7 +7,7 @@ namespace BlogApp.Models
     {
 
 
-
+        public int PostId { get; set; }
         [Required]
         [Display(Name = "Başlık")]
         public string? Title { get; set; }
@@ -21,6 +22,8 @@ namespace BlogApp.Models
         public string? Image { get; set; }
         [Display(Name = "Url")]
         public string? Url { get; set; }
+        public bool IsActive { get; set; }
+        public List<Tag> Tags { get; set; } = new();
 
 
 

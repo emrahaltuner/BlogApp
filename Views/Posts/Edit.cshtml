@@ -1,10 +1,11 @@
 @model PostCreateViewModel
-<div class="row">
-    <div class="col-12">
-        <div class="bg-white p-4">
-            <h1>Create Post</h1>
-            <form action="/posts/create" method="post" enctype="multipart/form-data">
+<form action="/posts/edit" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-9">
+            <div class="bg-white p-4">
+                <h1>Edit Post</h1>
                 <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="PostId">
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label"></label>
                     <input asp-for="Title" class="form-control">
@@ -29,14 +30,37 @@
 
 
                 <div class="mb-3">
-                    <label for="ImageFile" class="form-label">Profil Resmi</label>
-                    <input class="form-control" type="file" name="ImageFile" id="ImageFile">
+                    <label for="ImageFile" class="form-label">Görsel</label>
+                    <input class="form-control" type="file" name="ImageFile" value="@Model.Image" id="ImageFile">
                 </div>
+                @if(User.FindFirstValue(ClaimTypes.Role)=="admin")
+                {
+                <div class="form-check mb-3">
+                    <input asp-for="IsActive" class="form-check-input">
+                    <label asp-for="IsActive" class="form-check-label"></label>
+                </div>
+                }
                 <button type="submit" class="btn btn-primary">Kaydet</button>
-            </form>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="bg-white p-2">
+                @foreach(var tag in ViewBag.Tags)
+                {
+                <div class="form-check">
+                    <input class="form-check-input" name="tagIds" type="checkbox" value="@tag.TagId" id="tag_@tag.TagId"
+                        @(Model.Tags.Any(i=>i.TagId==tag.TagId) ? "checked" :"")
+                    >
+                    <label class="form-check-label" for="tag_@tag.TagId">
+                        @tag.Text
+                    </label>
+                </div>
+                }
+            </div>
         </div>
     </div>
-</div>
+</form>
 
 @section Scripts
 {

@@ -52,6 +52,13 @@ app.MapControllerRoute(
     pattern: "posts/details/{url}",
     defaults: new { controller = "Posts", action = "Details" }
 );
+
+//localhost//post/react-dersleri
+app.MapControllerRoute(
+    name: "user_profile",
+    pattern: "profile/{username}",
+    defaults: new { controller = "Users", action = "Profile" }
+);
 //localhost//:posts/tag/php
 app.MapControllerRoute(
     name: "post_to_tag",

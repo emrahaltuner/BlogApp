@@ -7,6 +7,7 @@ using BlogApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BlogApp.Controllers;
 
@@ -28,7 +29,7 @@ public class PostsController : Controller
     public async Task<IActionResult> Index(string? tag)
     {
 
-        var posts = _postRepository.Posts;
+        var posts = _postRepository.Posts.Where(i => i.IsActive);
         if (!string.IsNullOrEmpty(tag))
         {
             posts = posts.Where(x => x.Tags.Any(t => t.Url == tag));
@@ -44,6 +45,7 @@ public class PostsController : Controller
     {
         var post = await _postRepository
         .Posts
+        .Include(p => p.User)
         .Include(p => p.Tags)
         .Include(c => c.Comments)
         .ThenInclude(u => u.User)
@@ -160,5 +162,69 @@ public class PostsController : Controller
         }
 
         return randomFileName;
+    }
+
+
+    [Authorize]
+    public IActionResult Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+        var post = _postRepository.Posts.Include(p => p.Tags).FirstOrDefault(i => i.PostId == id);
+        if (post == null)
+        {
+            return NotFound();
+        }
+        ViewBag.Tags = _tagRepository.Tags.ToList();
+        return View(
+            new PostCreateViewModel
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Desc = post.Desc,
+                Content = post.Content,
+                Url = post.Url,
+                IsActive = post.IsActive,
+                Tags = post.Tags
+            }
+        );
+    }
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Edit(PostCreateViewModel model, IFormFile ImageFile, int[] tagIds)
+    {
+
+
+        if (ModelState.IsValid)
+        {
+            var imagePath = "wwwroot/img";
+            var uploadedFileName = await UploadFileAsync(ImageFile, imagePath);
+
+            if (uploadedFileName != null)
+            {
+                model.Image = uploadedFileName;
+            }
+
+            var entitytoUpdate = new Post
+            {
+                PostId = model.PostId,
+                Title = model.Title,
+                Content = model.Content,
+                Url = model.Url,
+                Desc = model.Desc,
+                Image = model.Image
+            };
+            if (User.FindFirstValue(ClaimTypes.Role) == "admin")
+            {
+                entitytoUpdate.IsActive = model.IsActive;
+            }
+
+            _postRepository.EditPost(entitytoUpdate, tagIds);
+            return RedirectToAction("List");
+        }
+        ViewBag.Tags = _tagRepository.Tags.ToList();
+        return View(model);
     }
 }
